@@ -32,7 +32,7 @@
           <div class="panel-head">
             <div>
               <h2>活动管理</h2>
-              <p>配置有效状态、业务类型、普通券和四种叠加券发券活动</p>
+              <p>同一业务类型仅允许一条有效配置</p>
             </div>
           </div>
           <div class="table-wrap">
@@ -145,6 +145,7 @@
             <input name="smartSubsidyPresaleActivityId" required maxlength="24" />
           </label>
         </fieldset>
+        <p class="form-error" id="activityFormError" aria-live="polite"></p>
         <footer>
           <button type="button" class="ghost" id="cancelActivityBtn">取消</button>
           <button type="submit" class="primary">保存</button>

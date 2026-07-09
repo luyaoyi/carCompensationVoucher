@@ -143,6 +143,7 @@ const activityTable = document.querySelector("#activityTable");
 const recordTable = document.querySelector("#recordTable");
 const activityDialog = document.querySelector("#activityDialog");
 const activityForm = document.querySelector("#activityForm");
+const activityFormError = document.querySelector("#activityFormError");
 const infoDialog = document.querySelector("#infoDialog");
 const infoTitle = document.querySelector("#infoTitle");
 const infoContent = document.querySelector("#infoContent");
@@ -160,6 +161,7 @@ navItems.forEach((item) => {
 document.querySelector("#createActivityBtn").addEventListener("click", () => {
   editingActivityId = null;
   activityForm.reset();
+  activityFormError.textContent = "";
   activityForm.elements.status.value = "active";
   activityForm.elements.bizType.value = "用车";
   activityDialog.showModal();
@@ -182,6 +184,12 @@ activityForm.addEventListener("submit", (event) => {
     issueActivities: getIssueActivityPayload(data),
     updatedAt: nowText(),
   };
+  activityFormError.textContent = "";
+
+  if (hasActiveConfigConflict(payload.bizType, editingActivityId) && payload.status === "active") {
+    activityFormError.textContent = "同一业务类型仅允许存在一条有效配置";
+    return;
+  }
 
   if (editingActivityId) {
     const current = activities.find((item) => item.id === editingActivityId);
@@ -281,6 +289,7 @@ function renderRecords() {
 function openEdit(id) {
   const item = activities.find((activity) => activity.id === id);
   editingActivityId = id;
+  activityFormError.textContent = "";
   activityForm.elements.name.value = item.name;
   activityForm.elements.bizType.value = item.bizType;
   activityForm.elements.status.value = item.status;
@@ -335,6 +344,10 @@ function getIssueActivityPayload(data) {
     limitedExclusive: data.get("limitedExclusiveActivityId").trim(),
     smartSubsidyPresale: data.get("smartSubsidyPresaleActivityId").trim(),
   };
+}
+
+function hasActiveConfigConflict(bizType, currentId) {
+  return activities.some((activity) => activity.bizType === bizType && activity.status === "active" && activity.id !== currentId);
 }
 
 function setIssueActivityFields(issueActivities = {}) {

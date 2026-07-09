@@ -319,6 +319,13 @@ dialog::backdrop {
   margin-top: 10px;
 }
 
+.form-error {
+  min-height: 20px;
+  margin-top: 12px;
+  color: var(--danger);
+  font-size: 13px;
+}
+
 .dialog-form footer {
   justify-content: flex-end;
   margin-top: 18px;
