@@ -260,14 +260,12 @@ function renderRecords() {
           <td>${item.id}</td>
           <td>${item.userId}</td>
           <td>${item.orderNo}</td>
-          <td>${item.refundNo}</td>
           <td>${item.vouchers.length}</td>
           <td><span class="badge ${statusClass[recordStatus]}">${statusText[recordStatus]}</span></td>
           <td>${formatFailReason(item)}</td>
           <td>
             <div class="actions">
               <button class="link-btn" data-record-detail="${item.id}">查看</button>
-              <button class="link-btn" data-reissue="${item.id}" ${!hasFailedVoucher(item) ? "disabled" : ""}>重新赔付</button>
             </div>
           </td>
         </tr>
@@ -277,9 +275,6 @@ function renderRecords() {
 
   recordTable.querySelectorAll("[data-record-detail]").forEach((button) => {
     button.addEventListener("click", () => openRecordDetail(button.dataset.recordDetail));
-  });
-  recordTable.querySelectorAll("[data-reissue]").forEach((button) => {
-    button.addEventListener("click", () => reissue(button.dataset.reissue));
   });
 }
 
@@ -322,16 +317,14 @@ function openActivityLog(id) {
   infoDialog.showModal();
 }
 
-function reissue(id) {
-  const item = compensationRecords.find((record) => record.id === id);
-  item.vouchers
-    .filter((voucher) => voucher.status === "failed")
-    .forEach((voucher) => {
-      voucher.status = "success";
-      voucher.newVoucherId = `NVCH${Math.floor(900000 + Math.random() * 99999)}`;
-      voucher.failReason = "";
-    });
+function reissueVoucher(recordId, sourceVoucherId) {
+  const item = compensationRecords.find((record) => record.id === recordId);
+  const voucher = item.vouchers.find((current) => current.sourceVoucherId === sourceVoucherId);
+  voucher.status = "success";
+  voucher.newVoucherId = `NVCH${Math.floor(900000 + Math.random() * 99999)}`;
+  voucher.failReason = "";
   render();
+  openRecordDetail(recordId);
 }
 
 function getIssueActivityPayload(data) {
@@ -369,8 +362,7 @@ function openRecordDetail(id) {
     <dl>
       <dt>赔付记录</dt><dd>${item.id}</dd>
       <dt>用户</dt><dd>${item.userId}</dd>
-      <dt>原订单</dt><dd>${item.orderNo}</dd>
-      <dt>客诉/退款单</dt><dd>${item.refundNo}</dd>
+      <dt>订单号</dt><dd>${item.orderNo}</dd>
     </dl>
     <div class="detail-table-wrap">
       <table class="detail-table">
@@ -380,6 +372,7 @@ function openRecordDetail(id) {
             <th>类型</th>
             <th>补发券号</th>
             <th>发放状态</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
@@ -394,6 +387,13 @@ function openRecordDetail(id) {
                     <span class="badge ${statusClass[voucher.status]}">${statusText[voucher.status]}</span>
                     ${voucher.failReason ? `<span class="fail-reason">${voucher.failReason}</span>` : ""}
                   </td>
+                  <td>
+                    ${
+                      voucher.status === "failed"
+                        ? `<button class="link-btn" data-reissue-voucher="${item.id}:${voucher.sourceVoucherId}">重新赔付</button>`
+                        : "-"
+                    }
+                  </td>
                 </tr>
               `,
             )
@@ -402,7 +402,13 @@ function openRecordDetail(id) {
       </table>
     </div>
   `;
-  infoDialog.showModal();
+  if (!infoDialog.open) {
+    infoDialog.showModal();
+  }
+  infoContent.querySelectorAll("[data-reissue-voucher]").forEach((button) => {
+    const [recordId, sourceVoucherId] = button.dataset.reissueVoucher.split(":");
+    button.addEventListener("click", () => reissueVoucher(recordId, sourceVoucherId));
+  });
 }
 
 function getRecordStatus(record) {
@@ -414,10 +420,6 @@ function getRecordStatus(record) {
     return "failed";
   }
   return "partial_failed";
-}
-
-function hasFailedVoucher(record) {
-  return record.vouchers.some((voucher) => voucher.status === "failed");
 }
 
 function formatFailReason(record) {
