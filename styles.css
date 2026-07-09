@@ -269,7 +269,7 @@ tr:last-child td {
 }
 
 dialog {
-  width: min(560px, calc(100% - 32px));
+  width: min(720px, calc(100% - 32px));
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 0;
@@ -326,6 +326,25 @@ dialog::backdrop {
 
 .info-content {
   margin-top: 16px;
+}
+
+.detail-table-wrap {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+
+.detail-table {
+  min-width: 560px;
+}
+
+.detail-table th,
+.detail-table td {
+  padding: 10px 12px;
+}
+
+.fail-reason {
+  margin-left: 8px;
+  color: var(--muted);
 }
 
 .info-content dl {

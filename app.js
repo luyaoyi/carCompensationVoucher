@@ -6,10 +6,10 @@ const activities = [
     status: "active",
     issueActivities: {
       normal: "MKT-CAR-NORMAL",
-      stackA: "MKT-CAR-STACK-A",
-      stackB: "MKT-CAR-STACK-B",
-      stackC: "MKT-CAR-STACK-C",
-      stackD: "MKT-CAR-STACK-D",
+      auxiliaryPresale: "MKT-CAR-AUX-PRE",
+      freeIssuePresale: "MKT-CAR-FREE-PRE",
+      limitedExclusive: "MKT-CAR-LIMITED",
+      smartSubsidyPresale: "MKT-CAR-SMART",
     },
     updatedAt: "2026-07-08 10:20",
   },
@@ -20,10 +20,10 @@ const activities = [
     status: "inactive",
     issueActivities: {
       normal: "MKT-GRAY-NORMAL",
-      stackA: "MKT-GRAY-STACK-A",
-      stackB: "MKT-GRAY-STACK-B",
-      stackC: "MKT-GRAY-STACK-C",
-      stackD: "MKT-GRAY-STACK-D",
+      auxiliaryPresale: "MKT-GRAY-AUX-PRE",
+      freeIssuePresale: "MKT-GRAY-FREE-PRE",
+      limitedExclusive: "MKT-GRAY-LIMITED",
+      smartSubsidyPresale: "MKT-GRAY-SMART",
     },
     updatedAt: "2026-07-07 18:05",
   },
@@ -31,77 +31,93 @@ const activities = [
 
 const voucherKindText = {
   normal: "普通券",
-  stackA: "叠加券类型 A",
-  stackB: "叠加券类型 B",
-  stackC: "叠加券类型 C",
-  stackD: "叠加券类型 D",
+  auxiliaryPresale: "辅营售卖预发券",
+  freeIssuePresale: "免费发放预发券",
+  limitedExclusive: "限时专享券",
+  smartSubsidyPresale: "智能补贴预发券",
 };
 
-const records = [
+const compensationRecords = [
   {
     id: "RP202607080001",
     userId: "U102938",
     orderNo: "CAR20260708009",
-    sourceVoucherId: "VCH880012",
-    voucherType: "满减券",
-    voucherKind: "normal",
-    amount: 20,
-    issueActivityId: "MKT-CAR-NORMAL",
-    status: "success",
-    newVoucherId: "NVCH900112",
-    failReason: "",
+    refundNo: "CP20260708001",
+    createdAt: "2026-07-08 11:20",
+    vouchers: [
+      {
+        sourceVoucherId: "VCH880012",
+        voucherKind: "normal",
+        amount: 20,
+        issueActivityId: "MKT-CAR-NORMAL",
+        status: "success",
+        newVoucherId: "NVCH900112",
+        failReason: "",
+      },
+      {
+        sourceVoucherId: "VCH880013",
+        voucherKind: "auxiliaryPresale",
+        amount: 10,
+        issueActivityId: "MKT-CAR-AUX-PRE",
+        status: "success",
+        newVoucherId: "NVCH900113",
+        failReason: "",
+      },
+      {
+        sourceVoucherId: "VCH880014",
+        voucherKind: "freeIssuePresale",
+        amount: 15,
+        issueActivityId: "MKT-CAR-FREE-PRE",
+        status: "success",
+        newVoucherId: "NVCH900114",
+        failReason: "",
+      },
+      {
+        sourceVoucherId: "VCH880015",
+        voucherKind: "limitedExclusive",
+        amount: 8,
+        issueActivityId: "MKT-CAR-LIMITED",
+        status: "success",
+        newVoucherId: "NVCH900115",
+        failReason: "",
+      },
+      {
+        sourceVoucherId: "VCH880016",
+        voucherKind: "smartSubsidyPresale",
+        amount: 5,
+        issueActivityId: "MKT-CAR-SMART",
+        status: "success",
+        newVoucherId: "NVCH900116",
+        failReason: "",
+      },
+    ],
   },
   {
     id: "RP202607080002",
-    userId: "U102938",
-    orderNo: "CAR20260708009",
-    sourceVoucherId: "VCH880013",
-    voucherType: "满减券",
-    voucherKind: "stackA",
-    amount: 10,
-    issueActivityId: "MKT-CAR-STACK-A",
-    status: "failed",
-    newVoucherId: "",
-    failReason: "指定金额发放超时",
-  },
-  {
-    id: "RP202607080003",
-    userId: "U102938",
-    orderNo: "CAR20260708009",
-    sourceVoucherId: "VCH880014",
-    voucherType: "满减券",
-    voucherKind: "stackB",
-    amount: 15,
-    issueActivityId: "MKT-CAR-STACK-B",
-    status: "success",
-    newVoucherId: "NVCH900113",
-    failReason: "",
-  },
-  {
-    id: "RP202607080004",
-    userId: "U102938",
-    orderNo: "CAR20260708009",
-    sourceVoucherId: "VCH880015",
-    voucherType: "满减券",
-    voucherKind: "stackC",
-    amount: 8,
-    issueActivityId: "MKT-CAR-STACK-C",
-    status: "failed",
-    newVoucherId: "",
-    failReason: "叠加券类型缺失",
-  },
-  {
-    id: "RP202607080005",
-    userId: "U102938",
-    orderNo: "CAR20260708009",
-    sourceVoucherId: "VCH880016",
-    voucherType: "满减券",
-    voucherKind: "stackD",
-    amount: 5,
-    issueActivityId: "MKT-CAR-STACK-D",
-    status: "success",
-    newVoucherId: "NVCH900114",
-    failReason: "",
+    userId: "U837261",
+    orderNo: "CAR20260707021",
+    refundNo: "CP20260707008",
+    createdAt: "2026-07-07 18:05",
+    vouchers: [
+      {
+        sourceVoucherId: "VCH777201",
+        voucherKind: "normal",
+        amount: 30,
+        issueActivityId: "MKT-CAR-NORMAL",
+        status: "success",
+        newVoucherId: "NVCH900210",
+        failReason: "",
+      },
+      {
+        sourceVoucherId: "VCH777202",
+        voucherKind: "limitedExclusive",
+        amount: 6,
+        issueActivityId: "MKT-CAR-LIMITED",
+        status: "failed",
+        newVoucherId: "",
+        failReason: "发券活动调用超时",
+      },
+    ],
   },
 ];
 
@@ -112,7 +128,7 @@ const statusText = {
   inactive: "无效",
   success: "赔付成功",
   failed: "赔付失败",
-  unsupported: "不支持赔付",
+  partial_failed: "部分失败",
 };
 
 const statusClass = {
@@ -120,7 +136,7 @@ const statusClass = {
   inactive: "warn",
   success: "ok",
   failed: "fail",
-  unsupported: "warn",
+  partial_failed: "warn",
 };
 
 const activityTable = document.querySelector("#activityTable");
@@ -225,37 +241,43 @@ function renderRecords() {
   const orderKeyword = orderFilter.value.trim().toLowerCase();
   const userKeyword = userFilter.value.trim().toLowerCase();
   const voucherKeyword = voucherFilter.value.trim().toLowerCase();
-  const list = records.filter((item) => {
-    const matchStatus = status === "all" || item.status === status;
+  const list = compensationRecords.filter((item) => {
+    const recordStatus = getRecordStatus(item);
+    const matchStatus = status === "all" || recordStatus === status;
     const matchOrder = !orderKeyword || item.orderNo.toLowerCase().includes(orderKeyword);
     const matchUser = !userKeyword || item.userId.toLowerCase().includes(userKeyword);
-    const matchVoucher = !voucherKeyword || item.sourceVoucherId.toLowerCase().includes(voucherKeyword);
+    const matchVoucher =
+      !voucherKeyword ||
+      item.vouchers.some((voucher) => voucher.sourceVoucherId.toLowerCase().includes(voucherKeyword));
     return matchStatus && matchOrder && matchUser && matchVoucher;
   });
 
   recordTable.innerHTML = list
-    .map(
-      (item) => `
+    .map((item) => {
+      const recordStatus = getRecordStatus(item);
+      return `
         <tr>
           <td>${item.id}</td>
           <td>${item.userId}</td>
           <td>${item.orderNo}</td>
-          <td>${item.sourceVoucherId}</td>
-          <td>${item.voucherType}</td>
-          <td>${voucherKindText[item.voucherKind]}</td>
-          <td>${formatAmount(item.amount)}</td>
-          <td>${item.issueActivityId}</td>
-          <td><span class="badge ${statusClass[item.status]}">${statusText[item.status]}</span></td>
-          <td>${item.newVoucherId || "-"}</td>
-          <td>${item.failReason || "-"}</td>
+          <td>${item.refundNo}</td>
+          <td>${item.vouchers.length}</td>
+          <td><span class="badge ${statusClass[recordStatus]}">${statusText[recordStatus]}</span></td>
+          <td>${formatFailReason(item)}</td>
           <td>
-            <button class="link-btn" data-reissue="${item.id}" ${item.status !== "failed" ? "disabled" : ""}>重新赔付</button>
+            <div class="actions">
+              <button class="link-btn" data-record-detail="${item.id}">查看</button>
+              <button class="link-btn" data-reissue="${item.id}" ${!hasFailedVoucher(item) ? "disabled" : ""}>重新赔付</button>
+            </div>
           </td>
         </tr>
-      `,
-    )
+      `;
+    })
     .join("");
 
+  recordTable.querySelectorAll("[data-record-detail]").forEach((button) => {
+    button.addEventListener("click", () => openRecordDetail(button.dataset.recordDetail));
+  });
   recordTable.querySelectorAll("[data-reissue]").forEach((button) => {
     button.addEventListener("click", () => reissue(button.dataset.reissue));
   });
@@ -301,39 +323,109 @@ function openActivityLog(id) {
 }
 
 function reissue(id) {
-  const item = records.find((record) => record.id === id);
-  item.status = "success";
-  item.newVoucherId = `NVCH${Math.floor(900000 + Math.random() * 99999)}`;
-  item.failReason = "";
+  const item = compensationRecords.find((record) => record.id === id);
+  item.vouchers
+    .filter((voucher) => voucher.status === "failed")
+    .forEach((voucher) => {
+      voucher.status = "success";
+      voucher.newVoucherId = `NVCH${Math.floor(900000 + Math.random() * 99999)}`;
+      voucher.failReason = "";
+    });
   render();
 }
 
 function getIssueActivityPayload(data) {
   return {
     normal: data.get("normalIssueActivityId").trim(),
-    stackA: data.get("stackAActivityId").trim(),
-    stackB: data.get("stackBActivityId").trim(),
-    stackC: data.get("stackCActivityId").trim(),
-    stackD: data.get("stackDActivityId").trim(),
+    auxiliaryPresale: data.get("auxiliaryPresaleActivityId").trim(),
+    freeIssuePresale: data.get("freeIssuePresaleActivityId").trim(),
+    limitedExclusive: data.get("limitedExclusiveActivityId").trim(),
+    smartSubsidyPresale: data.get("smartSubsidyPresaleActivityId").trim(),
   };
 }
 
 function setIssueActivityFields(issueActivities = {}) {
   activityForm.elements.normalIssueActivityId.value = issueActivities.normal || "";
-  activityForm.elements.stackAActivityId.value = issueActivities.stackA || "";
-  activityForm.elements.stackBActivityId.value = issueActivities.stackB || "";
-  activityForm.elements.stackCActivityId.value = issueActivities.stackC || "";
-  activityForm.elements.stackDActivityId.value = issueActivities.stackD || "";
+  activityForm.elements.auxiliaryPresaleActivityId.value = issueActivities.auxiliaryPresale || "";
+  activityForm.elements.freeIssuePresaleActivityId.value = issueActivities.freeIssuePresale || "";
+  activityForm.elements.limitedExclusiveActivityId.value = issueActivities.limitedExclusive || "";
+  activityForm.elements.smartSubsidyPresaleActivityId.value = issueActivities.smartSubsidyPresale || "";
 }
 
 function formatMappingSummary(issueActivities) {
-  return `普通券 ${issueActivities.normal} / 叠加券 4 类`;
+  return `普通券 ${issueActivities.normal} / 叠加券 4 种`;
 }
 
 function formatMappingDetail(issueActivities) {
   return Object.entries(issueActivities)
     .map(([key, value]) => `${voucherKindText[key]}：${value}`)
     .join("<br />");
+}
+
+function openRecordDetail(id) {
+  const item = compensationRecords.find((record) => record.id === id);
+  infoTitle.textContent = "赔付明细";
+  infoContent.innerHTML = `
+    <dl>
+      <dt>赔付记录</dt><dd>${item.id}</dd>
+      <dt>用户</dt><dd>${item.userId}</dd>
+      <dt>原订单</dt><dd>${item.orderNo}</dd>
+      <dt>客诉/退款单</dt><dd>${item.refundNo}</dd>
+    </dl>
+    <div class="detail-table-wrap">
+      <table class="detail-table">
+        <thead>
+          <tr>
+            <th>原券号</th>
+            <th>类型</th>
+            <th>补发券号</th>
+            <th>发放状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${item.vouchers
+            .map(
+              (voucher) => `
+                <tr>
+                  <td>${voucher.sourceVoucherId}</td>
+                  <td>${voucherKindText[voucher.voucherKind]}</td>
+                  <td>${voucher.newVoucherId || "-"}</td>
+                  <td>
+                    <span class="badge ${statusClass[voucher.status]}">${statusText[voucher.status]}</span>
+                    ${voucher.failReason ? `<span class="fail-reason">${voucher.failReason}</span>` : ""}
+                  </td>
+                </tr>
+              `,
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+  infoDialog.showModal();
+}
+
+function getRecordStatus(record) {
+  const failedCount = record.vouchers.filter((voucher) => voucher.status === "failed").length;
+  if (failedCount === 0) {
+    return "success";
+  }
+  if (failedCount === record.vouchers.length) {
+    return "failed";
+  }
+  return "partial_failed";
+}
+
+function hasFailedVoucher(record) {
+  return record.vouchers.some((voucher) => voucher.status === "failed");
+}
+
+function formatFailReason(record) {
+  const failed = record.vouchers.filter((voucher) => voucher.status === "failed");
+  if (failed.length === 0) {
+    return "-";
+  }
+  return `${failed.length} 张失败`;
 }
 
 function formatAmount(amount) {
