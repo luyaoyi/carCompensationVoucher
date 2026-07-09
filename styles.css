@@ -299,6 +299,35 @@ dialog::backdrop {
   font-size: 13px;
 }
 
+.radio-fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin: 16px 0 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.radio-fieldset legend {
+  padding: 0 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.radio-fieldset label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0;
+  color: var(--text);
+}
+
+.radio-fieldset input {
+  min-height: auto;
+  padding: 0;
+}
+
 .mapping-fieldset {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

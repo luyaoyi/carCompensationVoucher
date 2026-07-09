@@ -3,6 +3,7 @@ const activities = [
     id: "CUST-CAR-001",
     name: "用车客诉代金券赔付",
     bizType: "用车",
+    subBizType: "顺风车",
     status: "active",
     issueActivities: {
       normal: "MKT-CAR-NORMAL",
@@ -17,12 +18,13 @@ const activities = [
     id: "CUST-CAR-002",
     name: "用车赔付灰度活动",
     bizType: "用车",
-    status: "inactive",
+    subBizType: "接送机",
+    status: "active",
     issueActivities: {
       normal: "MKT-GRAY-NORMAL",
-      auxiliaryPresale: "MKT-GRAY-AUX-PRE",
+      auxiliaryPresale: "",
       freeIssuePresale: "MKT-GRAY-FREE-PRE",
-      limitedExclusive: "MKT-GRAY-LIMITED",
+      limitedExclusive: "",
       smartSubsidyPresale: "MKT-GRAY-SMART",
     },
     updatedAt: "2026-07-07 18:05",
@@ -164,6 +166,7 @@ document.querySelector("#createActivityBtn").addEventListener("click", () => {
   activityFormError.textContent = "";
   activityForm.elements.status.value = "active";
   activityForm.elements.bizType.value = "用车";
+  activityForm.elements.subBizType.value = "顺风车";
   activityDialog.showModal();
 });
 
@@ -180,14 +183,15 @@ activityForm.addEventListener("submit", (event) => {
   const payload = {
     name: data.get("name").trim(),
     bizType: data.get("bizType"),
+    subBizType: data.get("subBizType"),
     status: data.get("status"),
     issueActivities: getIssueActivityPayload(data),
     updatedAt: nowText(),
   };
   activityFormError.textContent = "";
 
-  if (hasActiveConfigConflict(payload.bizType, editingActivityId) && payload.status === "active") {
-    activityFormError.textContent = "同一业务类型仅允许存在一条有效配置";
+  if (hasActiveConfigConflict(payload.bizType, payload.subBizType, editingActivityId) && payload.status === "active") {
+    activityFormError.textContent = "同一业务类型 + 子业务类型仅允许存在一条有效配置";
     return;
   }
 
@@ -218,6 +222,7 @@ function renderActivities() {
           <td>${item.id}</td>
           <td>${item.name}</td>
           <td>${item.bizType}</td>
+          <td>${item.subBizType}</td>
           <td><span class="badge ${statusClass[item.status]}">${statusText[item.status]}</span></td>
           <td>${formatMappingSummary(item.issueActivities)}</td>
           <td>${item.updatedAt}</td>
@@ -292,6 +297,7 @@ function openEdit(id) {
   activityFormError.textContent = "";
   activityForm.elements.name.value = item.name;
   activityForm.elements.bizType.value = item.bizType;
+  activityForm.elements.subBizType.value = item.subBizType;
   activityForm.elements.status.value = item.status;
   setIssueActivityFields(item.issueActivities);
   activityDialog.showModal();
@@ -305,8 +311,9 @@ function openActivityDetail(id) {
       <dt>活动编号</dt><dd>${item.id}</dd>
       <dt>活动名称</dt><dd>${item.name}</dd>
       <dt>业务类型</dt><dd>${item.bizType}</dd>
+      <dt>子业务类型</dt><dd>${item.subBizType}</dd>
       <dt>活动状态</dt><dd>${statusText[item.status]}</dd>
-      <dt>发券配置</dt><dd>${formatMappingDetail(item.issueActivities)}</dd>
+      <dt>赔付配置</dt><dd>${formatMappingDetail(item.issueActivities)}</dd>
       <dt>更新时间</dt><dd>${item.updatedAt}</dd>
     </dl>
   `;
@@ -346,8 +353,14 @@ function getIssueActivityPayload(data) {
   };
 }
 
-function hasActiveConfigConflict(bizType, currentId) {
-  return activities.some((activity) => activity.bizType === bizType && activity.status === "active" && activity.id !== currentId);
+function hasActiveConfigConflict(bizType, subBizType, currentId) {
+  return activities.some(
+    (activity) =>
+      activity.bizType === bizType &&
+      activity.subBizType === subBizType &&
+      activity.status === "active" &&
+      activity.id !== currentId,
+  );
 }
 
 function setIssueActivityFields(issueActivities = {}) {
@@ -359,12 +372,13 @@ function setIssueActivityFields(issueActivities = {}) {
 }
 
 function formatMappingSummary(issueActivities) {
-  return `普通券 ${issueActivities.normal} / 叠加券 4 种`;
+  const configuredStackCount = Object.entries(issueActivities).filter(([key, value]) => key !== "normal" && value).length;
+  return `普通券 ${issueActivities.normal} / 叠加券已配 ${configuredStackCount} 种`;
 }
 
 function formatMappingDetail(issueActivities) {
   return Object.entries(issueActivities)
-    .map(([key, value]) => `${voucherKindText[key]}：${value}`)
+    .map(([key, value]) => `${voucherKindText[key]}：${value || "未配置"}`)
     .join("<br />");
 }
 
