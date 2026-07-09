@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>用车代金券赔付后台</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar" aria-label="后台导航">
+      <div class="brand">
+        <strong>用车代金券赔付后台</strong>
+        <span>定制活动</span>
+      </div>
+      <nav>
+        <button class="nav-item active" data-page="configPage">配置管理页</button>
+        <button class="nav-item" data-page="dataPage">数据页</button>
+      </nav>
+    </aside>
+
+    <main class="app">
+      <section class="page active" id="configPage">
+        <header class="topbar">
+          <div>
+            <h1>配置管理页</h1>
+            <p>配置活动有效状态、业务类型和绑定营销平台发券活动</p>
+          </div>
+          <button class="primary" id="createActivityBtn">新增活动</button>
+        </header>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>活动管理</h2>
+              <p>配置有效状态、业务类型、绑定营销平台发券活动</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>活动编号</th>
+                  <th>活动名称</th>
+                  <th>业务类型</th>
+                  <th>状态</th>
+                  <th>绑定发券活动</th>
+                  <th>更新时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="activityTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="dataPage">
+        <header class="topbar">
+          <div>
+            <h1>数据页</h1>
+            <p>查看赔付数据，失败记录可在定制活动侧重新赔付</p>
+          </div>
+        </header>
+
+        <section class="panel">
+          <div class="panel-head compact">
+            <div>
+              <h2>赔付数据</h2>
+              <p>按赔付状态筛选记录，失败记录可重新赔付</p>
+            </div>
+            <div class="filters">
+              <select id="statusFilter" aria-label="赔付状态筛选">
+                <option value="all">全部状态</option>
+                <option value="success">赔付成功</option>
+                <option value="failed">赔付失败</option>
+                <option value="unsupported">不支持赔付</option>
+              </select>
+              <input id="orderFilter" type="search" placeholder="搜索订单" />
+              <input id="userFilter" type="search" placeholder="搜索用户" />
+              <input id="voucherFilter" type="search" placeholder="搜索原券" />
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>赔付记录</th>
+                  <th>用户</th>
+                  <th>原订单</th>
+                  <th>原券</th>
+                  <th>券类型</th>
+                  <th>原券金额</th>
+                  <th>状态</th>
+                  <th>新券</th>
+                  <th>失败原因</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="recordTable"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="activityDialog">
+      <form method="dialog" class="dialog-form" id="activityForm">
+        <header>
+          <h2>活动配置</h2>
+        </header>
+        <label>
+          活动名称
+          <input name="name" required maxlength="30" />
+        </label>
+        <label>
+          业务类型
+          <select name="bizType" required>
+            <option value="用车">用车</option>
+          </select>
+        </label>
+        <label>
+          活动状态
+          <select name="status" required>
+            <option value="active">有效</option>
+            <option value="inactive">无效</option>
+          </select>
+        </label>
+        <label>
+          绑定营销平台发券活动编号
+          <input name="issueActivityId" required maxlength="24" />
+        </label>
+        <footer>
+          <button type="button" class="ghost" id="cancelActivityBtn">取消</button>
+          <button type="submit" class="primary">保存</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <dialog id="infoDialog">
+      <div class="dialog-form">
+        <header>
+          <h2 id="infoTitle">详情</h2>
+        </header>
+        <div class="info-content" id="infoContent"></div>
+        <footer>
+          <button type="button" class="primary" id="closeInfoBtn">关闭</button>
+        </footer>
+      </div>
+    </dialog>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
