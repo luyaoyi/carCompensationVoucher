@@ -23,7 +23,7 @@
         <header class="topbar">
           <div>
             <h1>配置管理页</h1>
-            <p>配置活动有效状态、业务类型和绑定营销平台发券活动</p>
+            <p>配置活动有效状态、业务类型和各券类型对应的发券活动</p>
           </div>
           <button class="primary" id="createActivityBtn">新增活动</button>
         </header>
@@ -32,7 +32,7 @@
           <div class="panel-head">
             <div>
               <h2>活动管理</h2>
-              <p>配置有效状态、业务类型、绑定营销平台发券活动</p>
+              <p>配置有效状态、业务类型、普通券和叠加券发券活动</p>
             </div>
           </div>
           <div class="table-wrap">
@@ -43,7 +43,7 @@
                   <th>活动名称</th>
                   <th>业务类型</th>
                   <th>状态</th>
-                  <th>绑定发券活动</th>
+                  <th>券类型发券配置</th>
                   <th>更新时间</th>
                   <th>操作</th>
                 </tr>
@@ -89,7 +89,9 @@
                   <th>原订单</th>
                   <th>原券</th>
                   <th>券类型</th>
+                  <th>叠加类型</th>
                   <th>原券金额</th>
+                  <th>发券活动</th>
                   <th>状态</th>
                   <th>新券</th>
                   <th>失败原因</th>
@@ -126,9 +128,28 @@
           </select>
         </label>
         <label>
-          绑定营销平台发券活动编号
-          <input name="issueActivityId" required maxlength="24" />
+          普通券发券活动编号
+          <input name="normalIssueActivityId" required maxlength="24" />
         </label>
+        <fieldset class="mapping-fieldset">
+          <legend>叠加券发券活动配置</legend>
+          <label>
+            叠加券类型 A
+            <input name="stackAActivityId" required maxlength="24" />
+          </label>
+          <label>
+            叠加券类型 B
+            <input name="stackBActivityId" required maxlength="24" />
+          </label>
+          <label>
+            叠加券类型 C
+            <input name="stackCActivityId" required maxlength="24" />
+          </label>
+          <label>
+            叠加券类型 D
+            <input name="stackDActivityId" required maxlength="24" />
+          </label>
+        </fieldset>
         <footer>
           <button type="button" class="ghost" id="cancelActivityBtn">取消</button>
           <button type="submit" class="primary">保存</button>

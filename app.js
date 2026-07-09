@@ -4,7 +4,13 @@ const activities = [
     name: "用车客诉代金券赔付",
     bizType: "用车",
     status: "active",
-    issueActivityId: "MKT-ISSUE-8891",
+    issueActivities: {
+      normal: "MKT-CAR-NORMAL",
+      stackA: "MKT-CAR-STACK-A",
+      stackB: "MKT-CAR-STACK-B",
+      stackC: "MKT-CAR-STACK-C",
+      stackD: "MKT-CAR-STACK-D",
+    },
     updatedAt: "2026-07-08 10:20",
   },
   {
@@ -12,10 +18,24 @@ const activities = [
     name: "用车赔付灰度活动",
     bizType: "用车",
     status: "inactive",
-    issueActivityId: "MKT-ISSUE-7720",
+    issueActivities: {
+      normal: "MKT-GRAY-NORMAL",
+      stackA: "MKT-GRAY-STACK-A",
+      stackB: "MKT-GRAY-STACK-B",
+      stackC: "MKT-GRAY-STACK-C",
+      stackD: "MKT-GRAY-STACK-D",
+    },
     updatedAt: "2026-07-07 18:05",
   },
 ];
+
+const voucherKindText = {
+  normal: "普通券",
+  stackA: "叠加券类型 A",
+  stackB: "叠加券类型 B",
+  stackC: "叠加券类型 C",
+  stackD: "叠加券类型 D",
+};
 
 const records = [
   {
@@ -24,7 +44,9 @@ const records = [
     orderNo: "CAR20260708009",
     sourceVoucherId: "VCH880012",
     voucherType: "满减券",
+    voucherKind: "normal",
     amount: 20,
+    issueActivityId: "MKT-CAR-NORMAL",
     status: "success",
     newVoucherId: "NVCH900112",
     failReason: "",
@@ -35,32 +57,51 @@ const records = [
     orderNo: "CAR20260708009",
     sourceVoucherId: "VCH880013",
     voucherType: "满减券",
+    voucherKind: "stackA",
     amount: 10,
+    issueActivityId: "MKT-CAR-STACK-A",
     status: "failed",
     newVoucherId: "",
     failReason: "指定金额发放超时",
   },
   {
     id: "RP202607080003",
-    userId: "U837261",
-    orderNo: "CAR20260707021",
-    sourceVoucherId: "VCH777201",
-    voucherType: "折扣券",
-    amount: "8折",
-    status: "unsupported",
-    newVoucherId: "",
-    failReason: "折扣券暂不支持赔付",
+    userId: "U102938",
+    orderNo: "CAR20260708009",
+    sourceVoucherId: "VCH880014",
+    voucherType: "满减券",
+    voucherKind: "stackB",
+    amount: 15,
+    issueActivityId: "MKT-CAR-STACK-B",
+    status: "success",
+    newVoucherId: "NVCH900113",
+    failReason: "",
   },
   {
     id: "RP202607080004",
-    userId: "U556201",
-    orderNo: "CAR20260706018",
-    sourceVoucherId: "VCH662190",
+    userId: "U102938",
+    orderNo: "CAR20260708009",
+    sourceVoucherId: "VCH880015",
     voucherType: "满减券",
-    amount: 30,
+    voucherKind: "stackC",
+    amount: 8,
+    issueActivityId: "MKT-CAR-STACK-C",
     status: "failed",
     newVoucherId: "",
-    failReason: "原券信息查询失败",
+    failReason: "叠加券类型缺失",
+  },
+  {
+    id: "RP202607080005",
+    userId: "U102938",
+    orderNo: "CAR20260708009",
+    sourceVoucherId: "VCH880016",
+    voucherType: "满减券",
+    voucherKind: "stackD",
+    amount: 5,
+    issueActivityId: "MKT-CAR-STACK-D",
+    status: "success",
+    newVoucherId: "NVCH900114",
+    failReason: "",
   },
 ];
 
@@ -122,7 +163,7 @@ activityForm.addEventListener("submit", (event) => {
     name: data.get("name").trim(),
     bizType: data.get("bizType"),
     status: data.get("status"),
-    issueActivityId: data.get("issueActivityId").trim(),
+    issueActivities: getIssueActivityPayload(data),
     updatedAt: nowText(),
   };
 
@@ -154,7 +195,7 @@ function renderActivities() {
           <td>${item.name}</td>
           <td>${item.bizType}</td>
           <td><span class="badge ${statusClass[item.status]}">${statusText[item.status]}</span></td>
-          <td>${item.issueActivityId}</td>
+          <td>${formatMappingSummary(item.issueActivities)}</td>
           <td>${item.updatedAt}</td>
           <td>
             <div class="actions">
@@ -201,7 +242,9 @@ function renderRecords() {
           <td>${item.orderNo}</td>
           <td>${item.sourceVoucherId}</td>
           <td>${item.voucherType}</td>
+          <td>${voucherKindText[item.voucherKind]}</td>
           <td>${formatAmount(item.amount)}</td>
+          <td>${item.issueActivityId}</td>
           <td><span class="badge ${statusClass[item.status]}">${statusText[item.status]}</span></td>
           <td>${item.newVoucherId || "-"}</td>
           <td>${item.failReason || "-"}</td>
@@ -224,7 +267,7 @@ function openEdit(id) {
   activityForm.elements.name.value = item.name;
   activityForm.elements.bizType.value = item.bizType;
   activityForm.elements.status.value = item.status;
-  activityForm.elements.issueActivityId.value = item.issueActivityId;
+  setIssueActivityFields(item.issueActivities);
   activityDialog.showModal();
 }
 
@@ -237,7 +280,7 @@ function openActivityDetail(id) {
       <dt>活动名称</dt><dd>${item.name}</dd>
       <dt>业务类型</dt><dd>${item.bizType}</dd>
       <dt>活动状态</dt><dd>${statusText[item.status]}</dd>
-      <dt>绑定发券活动</dt><dd>${item.issueActivityId}</dd>
+      <dt>发券配置</dt><dd>${formatMappingDetail(item.issueActivities)}</dd>
       <dt>更新时间</dt><dd>${item.updatedAt}</dd>
     </dl>
   `;
@@ -250,7 +293,7 @@ function openActivityLog(id) {
   infoContent.innerHTML = `
     <ul class="log-list">
       <li><span>${item.updatedAt}</span> 更新活动配置：${item.name}</li>
-      <li><span>2026-07-08 09:30</span> 绑定营销平台发券活动：${item.issueActivityId}</li>
+      <li><span>2026-07-08 09:30</span> 配置券类型对应发券活动</li>
       <li><span>2026-07-08 09:10</span> 创建活动：${item.id}</li>
     </ul>
   `;
@@ -263,6 +306,34 @@ function reissue(id) {
   item.newVoucherId = `NVCH${Math.floor(900000 + Math.random() * 99999)}`;
   item.failReason = "";
   render();
+}
+
+function getIssueActivityPayload(data) {
+  return {
+    normal: data.get("normalIssueActivityId").trim(),
+    stackA: data.get("stackAActivityId").trim(),
+    stackB: data.get("stackBActivityId").trim(),
+    stackC: data.get("stackCActivityId").trim(),
+    stackD: data.get("stackDActivityId").trim(),
+  };
+}
+
+function setIssueActivityFields(issueActivities = {}) {
+  activityForm.elements.normalIssueActivityId.value = issueActivities.normal || "";
+  activityForm.elements.stackAActivityId.value = issueActivities.stackA || "";
+  activityForm.elements.stackBActivityId.value = issueActivities.stackB || "";
+  activityForm.elements.stackCActivityId.value = issueActivities.stackC || "";
+  activityForm.elements.stackDActivityId.value = issueActivities.stackD || "";
+}
+
+function formatMappingSummary(issueActivities) {
+  return `普通券 ${issueActivities.normal} / 叠加券 4 类`;
+}
+
+function formatMappingDetail(issueActivities) {
+  return Object.entries(issueActivities)
+    .map(([key, value]) => `${voucherKindText[key]}：${value}`)
+    .join("<br />");
 }
 
 function formatAmount(amount) {

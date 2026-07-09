@@ -209,7 +209,7 @@ input {
 
 table {
   width: 100%;
-  min-width: 960px;
+  min-width: 1180px;
   border-collapse: collapse;
   font-size: 13px;
 }
@@ -269,7 +269,7 @@ tr:last-child td {
 }
 
 dialog {
-  width: min(420px, calc(100% - 32px));
+  width: min(560px, calc(100% - 32px));
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 0;
@@ -297,6 +297,26 @@ dialog::backdrop {
   margin-top: 14px;
   color: var(--muted);
   font-size: 13px;
+}
+
+.mapping-fieldset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 12px;
+  margin: 16px 0 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.mapping-fieldset legend {
+  padding: 0 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.mapping-fieldset label {
+  margin-top: 10px;
 }
 
 .dialog-form footer {
@@ -363,5 +383,9 @@ dialog::backdrop {
   .filters {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .mapping-fieldset {
+    grid-template-columns: 1fr;
   }
 }
